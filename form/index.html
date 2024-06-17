@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Form</title>
+</head>
+<body>
+    <div class="main-container">
+        <img src="logo.png" alt="" class="main-container__image">
+        <h1 class="main-container__title">Авторизация</h1>
+        <form class="login-form">
+            <div class="login-form__field">
+                <button  class="icon icon_type_login" disabled></button>
+                <input type="text" class="input input_type_login" placeholder="Email или телефон"> 
+            </div>
+            <div class="login-form__field">
+                <input type="password" class="input input_type_password" placeholder="Пароль">
+                <button class="icon icon_type_password" disabled></button>
+            </div>
+            <div class="message"><em>Неправильный логин или пароль</em></div>
+            <button type="submit" class="button button_type_submit">Войти</button>
+            <div class="loader" style="display: none;"></div>
+        </form>
+        <div class="success-auth">
+            <h2 class="success-auth__message"></h2>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
