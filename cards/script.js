@@ -1,54 +1,58 @@
 const cards = document.querySelectorAll('.card');
 const leafTop = document.querySelector(".leaf-container__image--top");
 const leafBottom = document.querySelector(".leaf-container__image--bottom");
-const bubbleBig = document.querySelectorAll(".card__bubble-big");
-const bubbleLittle = document.querySelectorAll(".card__bubble-little");
+const bubble = document.querySelectorAll(".card__bubble");
 const cardsRow = document.querySelector(".main-container__cards-row");
 const cardsArray = Array.from(cards);
-const moveDistance = 2;
 const rightOffset = parseInt(getComputedStyle(leafBottom).right);
-let position = 0;
-let timeoutId = null;
+const startingPointTop = -0.3;
+const startingPointBottom = 29.7;
+
 
 cards.forEach(card => {
     const img = card.querySelector('.card__image');
-    const originalSrc = img.src;
     const hoverSrc = img.getAttribute('data-hover');
-
+    const originalSrc = img.src;
+    const leaftopTopOffset = getComputedStyle(leafTop).top;
+    const leafbottomBottomOffset = getComputedStyle(leafBottom).bottom;
     card.addEventListener('mouseover', () => {
-        clearTimeout(timeoutId);
         img.src = hoverSrc;
-        position = moveDistance * (cardsArray.indexOf(card) + 1);
-        leafTop.style.left = position + 'px';
-        leafTop.style.top = "9%";
-        leafBottom.style.bottom = "31%";
-        const newRightPosition = rightOffset + position;
-        leafBottom.style.right = newRightPosition + 'px';
-        timeoutId = setTimeout(() => {
-            bubbleBig.forEach(element => {
-                element.classList.add("animate-big");
-            });
-            bubbleLittle.forEach(element => {
-                element.classList.add("animate-little");
-            });
-        }, 50);
-    });
+        const position = cardsArray.indexOf(card) + 1;
+        leafTop.style.left = startingPointTop + (position - 1) / 3 + '%';
+        leafTop.style.top = 9 + '%'
+        leafBottom.style.bottom = 29 + '%'
+        leafBottom.style.right = startingPointBottom + (position - 1) / 5 + '%';
+        let containsBubble = false;
+        bubble.forEach(b => {
+            if (card.contains(b)) {
+                b.classList.remove("bubble-animation");
+                let randomX = (Math.random() * parseInt(getComputedStyle(card).width) / 5).toFixed(0);
+                let randomY = (Math.random() * parseInt(getComputedStyle(card).height) / 5).toFixed(0);
+                let randomScale = Math.random() * 1.5;
+                containsBubble = true;
+                b.style.top = `${randomY}%`
+                b.style.left = `${randomX}%`
+                b.classList.add("bubble-animation");
+                b.style.transform = `translate(${randomX}px, ${randomY}px) scale(${randomScale})`;
+                console.log(randomX, randomY)
+            }
 
+        });
+    });
     card.addEventListener('mouseout', () => {
-        bubbleBig.forEach(element => {
-            element.classList.remove("animate-big");
-        });
-        bubbleLittle.forEach(element => {
-            element.classList.remove("animate-little");
-        });
-        clearTimeout(timeoutId);
         img.src = originalSrc;
     });
+
+    cardsRow.addEventListener("mouseleave", () => {
+        leafTop.style.top = leaftopTopOffset;
+        leafBottom.style.bottom = leafbottomBottomOffset;
+        if (parseFloat(leafTop.style.left) < 0) {
+            leafTop.style.left = 0
+            leafBottom.style.right = rightOffset + 'px'
+        }
+
+    })
+
+
 });
 
-cardsRow.addEventListener("mouseleave", () => {
-    leafTop.style.left = position + 'px';
-    leafTop.style.top = "10%";
-    leafBottom.style.right = rightOffset + 'px';
-    leafBottom.style.bottom = "30%";
-});
